@@ -1655,9 +1655,19 @@
 ;; Set up the build system to build the level geometry
 ;; this path is relative to the custom_assets/jak1/levels/ folder
 ;; it should point to the .jsonc file that specifies the level.
+
 (build-custom-level "test-zone")
 ;; the DGO file
 (custom-level-cgo "TSZ.DGO" "test-zone/testzone.gd")
+
+(build-custom-level "testlvla")
+;; the DGO file
+(custom-level-cgo "TSA.DGO" "testlvla/testlvla.gd")
+
+(build-custom-level "testlvlb")
+;; the DGO file
+(custom-level-cgo "TSB.DGO" "testlvlb/testlvlb.gd")
+
 
 ;; generate the art group for a custom actor.
 ;; requires a .glb model file in custom_assets/jak1/models/custom_levels
