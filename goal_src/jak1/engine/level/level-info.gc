@@ -2564,8 +2564,8 @@
              :vis-nick 'none
              :lev0 'testlvla
              :disp0 'display
-             :lev1 #f
-             :disp1 #f))
+             :lev1 'testlvlb
+             :disp1 'display))
        :tasks
        '()
        :priority 100
@@ -2620,8 +2620,8 @@
              :vis-nick 'none
              :lev0 'testlvlb
              :disp0 'display
-             :lev1 #f
-             :disp1 #f))
+             :lev1 'testlvla
+             :disp1 'display))
        :tasks
        '()
        :priority 100
