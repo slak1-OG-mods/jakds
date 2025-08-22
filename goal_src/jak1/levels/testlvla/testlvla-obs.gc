@@ -1,0 +1,68 @@
+;;-*-Lisp-*-
+(in-package goal)
+
+(deftype trechest (process-drawable)
+  ((root       collide-shape-moving :override)
+   (birth-time time-frame)
+   (base       vector :inline)
+   (old-base   vector :inline)
+   (bob-offset int64)
+   (bob-amount float))
+  (:methods
+   (init-collision! (_type_) object))
+  (:state-methods
+   idle))
+
+(def-actor trechest
+  :idle trechest-active-ja
+  :bounds (0 0 0 10))
+  :art (trechest-active-ja)
+  :joints (trechest-base trechest-top)
+
+
+(defmethod init-collision! ((this trechest))
+  (let ((cshape (new 'process 'collide-shape-moving this (collide-list-enum hit-by-player))))
+    (set! (-> cshape dynam) (copy *standard-dynamics* 'process))
+    (set! (-> cshape reaction) default-collision-reaction)
+    (set! (-> cshape no-reaction) (the (function collide-shape-moving collide-shape-intersect vector vector none) nothing))
+    (let ((cgroup (new 'process 'collide-shape-prim-group cshape (the uint 1) 0))) ;; update uint if we have more than 1 col shape in blender, 0 is prim ID
+      (set! (-> cgroup prim-core collide-as) (collide-kind ground-object)) ;; What type of collision we collide as
+      (set! (-> cgroup collide-with) (collide-kind target)) ;; What we can collide with
+      (set! (-> cgroup prim-core action) (collide-action solid rider-plat-sticky)) ;; The collision action
+      (set! (-> cgroup transform-index) 0) ;; The index of the bone we attach to. If this is not set, it will use the root position by default.
+      (set-vector! (-> cgroup local-sphere) 0.0 0.0 0.0 (meters 5))
+      (set-root-prim! cshape cgroup)
+      (let ((mesh (new 'process 'collide-shape-prim-mesh cshape (the uint 0) (the uint 0))))
+        (set! (-> mesh prim-core collide-as) (collide-kind ground-object))
+        (set! (-> mesh collide-with) (collide-kind target))
+        (set! (-> mesh prim-core action) (collide-action solid rider-plat-sticky))
+        (set! (-> mesh prim-core offense) (collide-offense indestructible))
+        (set! (-> mesh transform-index) 0)
+        (set-vector! (-> mesh local-sphere) 0.0 (meters 0) 0.0 (meters 5))
+        (append-prim cgroup mesh))
+      )
+    (set! (-> cshape nav-radius) (* 0.75 (-> cshape root-prim local-sphere w)))
+    (backup-collide-with-as cshape)
+    (set! (-> this root) cshape)))
+
+(defmethod init-from-entity! ((this trechest) (e entity-actor))
+  ;;(logior! (-> this mask) (process-mask enemy))
+  (init-collision! this)
+  (process-drawable-from-entity! this e)
+  ;;(set! (-> this bob-amount) 1024.0)
+  ;;(set! (-> this bob-offset)
+        ;;(+ (the int (-> this root trans x)) (the int (-> this root trans y)) (the int (-> this root trans z))))
+  (set-time! (-> this birth-time))
+  (vector-copy! (-> this base) (-> this root trans))
+  (vector-copy! (-> this old-base) (-> this root trans))
+  (initialize-skeleton this *trechest-sg* '())
+  ;;(logclear! (-> this mask) (process-mask actor-pause))
+  (transform-post)
+  (go-virtual trechest-active-ja :proc this) ;;check this if anim is not working /// NOTE: Remember to add model to jsonc
+  (none))
+
+(defstate idle (trechest)
+  :virtual #t ;;virtual state
+  :code (behavior ()
+    (loop (suspend)))
+  :post transform-post)

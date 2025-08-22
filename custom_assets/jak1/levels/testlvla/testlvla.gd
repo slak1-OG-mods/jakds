@@ -10,6 +10,7 @@
   "tpage-401.go"
   "tpage-1470.go"
   "test-actor-ag.go"
+  "trechest-ag.go"
   "testlvla.go"
   )
  )
