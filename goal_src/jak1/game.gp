@@ -2131,6 +2131,7 @@
 )
 
 (goal-src "levels/test-zone/test-zone-obs.gc" "process-drawable")
+(goal-src "levels/testlvla/testlvla-obs.gc" "process-drawable")
 
 
 (group-list "all-code"

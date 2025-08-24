@@ -4,6 +4,7 @@
 ;; the actual file name still needs to be 8.3
 ("TSA.DGO"
  ("test-zone-obs.o"
+  "testlvla-obs.o"
   "tpage-398.go"
   "tpage-400.go"
   "tpage-399.go"

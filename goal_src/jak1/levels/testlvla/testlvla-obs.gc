@@ -16,9 +16,9 @@
 
 (def-actor trechest
   :idle trechest-idle-ja
-  :bounds (0 0 0 5))
+  :bounds (0 0 0 10)
   :art (trechest-idle-ja trechest-active-ja)
-  :joints (trechest trechest-top)
+  :joints (trechest trechest-top))
 
 
 (defmethod init-collision! ((this trechest))
@@ -47,23 +47,17 @@
     (set! (-> this root) cshape)))
 
 (defmethod init-from-entity! ((this trechest) (e entity-actor))
-  (logior! (-> this mask) (process-mask enemy))
+(logior! (-> this mask) (process-mask enemy))
   (init-collision! this)
   (process-drawable-from-entity! this e)
-  (set! (-> this bob-amount) 1024.0)
-  (set! (-> this bob-offset)
-        (+ (the int (-> this root trans x)) (the int (-> this root trans y)) (the int (-> this root trans z))))
-  (set-time! (-> this birth-time))
-  (vector-copy! (-> this base) (-> this root trans))
-  (vector-copy! (-> this old-base) (-> this root trans))
   (initialize-skeleton this *trechest-sg* '())
   (logclear! (-> this mask) (process-mask actor-pause))
   (transform-post)
-  (go-virtual trechest-idle-ja :proc this) ;;check this if anim is not working
+  (go-virtual trechest-idle :proc this) ;;check this if anim is not working
   (none))
 
-(defstate idle (trechest)
-  :virtual #t ;;virtual state
+(defstate trechest-idle (trechest)
+  :virtual #t
   :event
     (behavior ((proc process) (argc int) (message symbol) (block event-message-block))
       (case message
