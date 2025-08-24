@@ -11,13 +11,14 @@
   (:methods
    (init-collision! (_type_) object))
   (:state-methods
-   idle))
+   trechest-idle
+   trechest-active))
 
 (def-actor trechest
-  :idle trechest-active-ja
-  :bounds (0 0 0 10))
-  :art (trechest-active-ja)
-  :joints (trechest-base trechest-top)
+  :idle trechest-idle-ja
+  :bounds (0 0 0 5))
+  :art (trechest-idle-ja trechest-active-ja)
+  :joints (trechest trechest-top)
 
 
 (defmethod init-collision! ((this trechest))
@@ -46,23 +47,48 @@
     (set! (-> this root) cshape)))
 
 (defmethod init-from-entity! ((this trechest) (e entity-actor))
-  ;;(logior! (-> this mask) (process-mask enemy))
+  (logior! (-> this mask) (process-mask enemy))
   (init-collision! this)
   (process-drawable-from-entity! this e)
-  ;;(set! (-> this bob-amount) 1024.0)
-  ;;(set! (-> this bob-offset)
-        ;;(+ (the int (-> this root trans x)) (the int (-> this root trans y)) (the int (-> this root trans z))))
+  (set! (-> this bob-amount) 1024.0)
+  (set! (-> this bob-offset)
+        (+ (the int (-> this root trans x)) (the int (-> this root trans y)) (the int (-> this root trans z))))
   (set-time! (-> this birth-time))
   (vector-copy! (-> this base) (-> this root trans))
   (vector-copy! (-> this old-base) (-> this root trans))
   (initialize-skeleton this *trechest-sg* '())
-  ;;(logclear! (-> this mask) (process-mask actor-pause))
+  (logclear! (-> this mask) (process-mask actor-pause))
   (transform-post)
-  (go-virtual trechest-active-ja :proc this) ;;check this if anim is not working /// NOTE: Remember to add model to jsonc
+  (go-virtual trechest-idle-ja :proc this) ;;check this if anim is not working
   (none))
 
 (defstate idle (trechest)
   :virtual #t ;;virtual state
-  :code (behavior ()
-    (loop (suspend)))
+  :event
+    (behavior ((proc process) (argc int) (message symbol) (block event-message-block))
+      (case message
+        (('attack 'touch)
+         ; (if (= (-> proc type) target)
+         ;   (send-event proc 'attack #f (static-attack-info ((shove-up (meters 2.5)) (shove-back (meters 7.5)))))
+         ;   )
+         #t)))
+  :code
+    (behavior ()
+      (loop
+        (quaternion-rotate-y! (-> self root quat) (-> self root quat) (* (degrees 45) (seconds-per-frame)))
+        (let ((bob (-> self bob-amount)))
+          (when (< 0.0 bob)
+            (set! (-> self root trans y)
+                  (+ (-> self base y)
+                     (* bob
+                        (sin (* 109.22667 (the float (mod (+ (- (current-time) (-> self birth-time)) (-> self bob-offset)) (seconds 2))))))))
+            (update-transforms! (-> self root))))
+        ; (debug-draw-tris (-> (res-lump-struct (-> self draw art-group data 0 extra) 'collide-mesh-group (array collide-mesh)) 0) self 2)
+        ; (dotimes (i (-> self node-list length))
+        ;   (let* ((joint (-> self node-list data i)) (jpos (vector<-cspace! (new-stack-vector0) joint)))
+        ;     (add-debug-sphere #t (bucket-id debug) jpos (meters 0.1) (static-rgba 0 #xff 0 #x40))
+        ;     (add-debug-text-sphere (!= (-> joint joint) #f) (bucket-id debug) jpos (meters 0.1) (-> joint joint name) (static-rgba 0 #xff 0 #x40))
+        ;     )
+        ;   )
+        (suspend)))
   :post transform-post)
