@@ -8,9 +8,8 @@
    (old-base   vector :inline))
   (:methods
    (init-collision! (_type_) object))
-  (:state-methods
-   trechest-idle
-   trechest-active))
+  (:states
+   trechest-idle))
 
 (def-actor trechest
   :bounds (0 0 0 7)
@@ -46,18 +45,41 @@
 (defmethod init-from-entity! ((this trechest) (e entity-actor))
   (init-collision! this)
   (process-drawable-from-entity! this e)
-  (initialize-skeleton this *trechest-sg* '()) ;; actor skeleton
-  (transform-post)
-  (go-virtual trechest-idle :proc this)
+  (initialize-skeleton this *trechest-sg* '()) ;; actor skeleton, draw-control
+  (set! (-> this draw origin-joint-index) 3)
+  (logior! (-> this skel status) (janim-status inited))
+  (logclear! (-> this mask) (process-mask actor-pause))
+  (transform-post) ;update root
+  (go trechest-idle)
   (none))
 
+
 (defstate trechest-idle (trechest)
-  :virtual #t
   :code
     (behavior ()
-      (ja :group! trechest-idle-ja)
+      (when (!= (ja-group) trechest-idle-ja)
+        (ja-channel-push! 0 (seconds 0.2))
+        (ja :group! trechest-idle-ja))
       (loop
-      (ja :num! (loop!))
-      (transform-post)
-       (suspend)))
-  :post transform-post)
+        (let* ((f30-0 2.0)
+               (v1-11 (/ (the-as int (rand-uint31-gen *random-generator*)) 256))
+               (v1-12 (the-as number (logior #x3f800000 v1-11))))
+          (countdown (gp-0 (+ (the int (* f30-0 (+ -1.0 (the-as float v1-12)))) 1))
+            (ja-no-eval :group! trechest-idle-ja :num! (seek!) :frame-num 0.0)
+            (until (ja-done? 0)
+              (suspend)
+              (ja :num! (seek!)))))
+        (cond
+          ((< (rand-float-gen) 0.5)
+           (ja-no-eval :group! trechest-active-ja :num! (seek!) :frame-num 0.0)
+           (until (ja-done? 0)
+             (suspend)
+             (ja :num! (seek!)))
+           (let ((gp-1 (current-time)))
+             (while (let ((s5-0 (current-time))
+                          (f30-1 300.0)
+                          (f28-0 0.5)
+                          (f26-0 0.5))
+                      (< (- s5-0 (the-as time-frame (the int (* f30-1 (+ f28-0 (* f26-0 (rand-float-gen))))))) gp-1))
+               (suspend)))))))
+    :post transform-post)
