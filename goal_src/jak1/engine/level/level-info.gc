@@ -2637,6 +2637,63 @@
        '()
        :wait-for-load #t))
 
+(define coast
+  (new 'static
+       'level-load-info
+       :index 29
+       :name 'coast
+       :visname 'coast-vis
+       ;; name + -vis
+       :nickname 'coa
+       ;; nickname
+       :packages
+       '()
+       :sound-banks
+       '()
+       :music-bank 'village2
+       :ambient-sounds
+       '()
+       :mood '*village2-mood*
+       :mood-func 'update-mood-village2
+       :ocean '*ocean-map-village1*
+       :sky #t
+       :sun-fade 1.0
+       :continues
+       '((new 'static
+             'continue-point
+             :name "coast-start"
+             :level 'coast
+             :trans
+             (new 'static 'vector :x (meters 434.831) :y (meters 12.9547) :z (meters 634.366) :w 1.0)
+             :quat
+             (new 'static 'quaternion :w 1.0)
+             :camera-trans
+             (new 'static 'vector :x 0.0 :y 4096.0 :z 0.0 :w 1.0)
+             :camera-rot
+             (new 'static 'array float 9 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0)
+             :load-commands
+             '()
+             :vis-nick 'none
+             :lev0 'coast
+             :disp0 'display
+             :lev1 #f
+             :disp1 #f))
+       :tasks
+       '()
+       :priority 100
+       :load-commands
+       '()
+       :alt-load-commands
+       '()
+       :bsp-mask #xffffffffffffffff
+       :bsphere
+       (new 'static 'sphere :w 167772160000.0)
+       :bottom-height (meters -20)
+       :run-packages
+       '()
+       :wait-for-load #t))
+
 (cons! *level-load-list* 'test-zone)
 (cons! *level-load-list* 'testlvla)
 (cons! *level-load-list* 'testlvlb)
+(cons! *level-load-list* 'coast)

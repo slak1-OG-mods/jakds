@@ -1668,6 +1668,10 @@
 ;; the DGO file
 (custom-level-cgo "TSB.DGO" "testlvlb/testlvlb.gd")
 
+(build-custom-level "coast")
+;; the DGO file
+(custom-level-cgo "COA.DGO" "coast/coast.gd")
+
 
 ;; generate the art group for a custom actor.
 ;; requires a .glb model file in custom_assets/jak1/models/custom_levels
