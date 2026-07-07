@@ -30,6 +30,7 @@
    qbert-plat-on-mimic
    qbert-plat-wait-for-master))
 
+
 (defskelgroup *qbert-plat-sg*
   qbert-plat
   qbert-plat-lod0-jg
@@ -80,6 +81,7 @@
   (:states (qbert-plat-master-do-door symbol)
    qbert-plat-master-idle
    qbert-plat-master-wait-for-door))
+
 
 (defstate qbert-plat-on-mimic (qbert-plat)
   :event
@@ -302,7 +304,7 @@
             (send-to-all (-> self link) 'notify)))
         (when (and *target* (not (-> self puzzle-beaten?)))
           (let ((gp-0 #f))
-            (let ((s5-1 (logtest? (-> *target* water flags) (water-flags wt09))))
+            (let ((s5-1 (logtest? (-> *target* water flag) (water-flag touch-water))))
               (when s5-1
                 (when (not (-> self player-in-water?))
                   (set! gp-0 #t)
