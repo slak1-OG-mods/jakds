@@ -61,7 +61,7 @@
   // All art groups you want to use in your custom level. Will add their models and corresponding textures to the FR3 file.
   // Note: You will still have to add them to your level's .gd file.
   // "art_groups": ["plat-ag"],
-  "art_groups": [],
+  "art_groups": ["bounceytarp-ag"],
 
   // If you have any custom models in the "custom_assets/jak1/models/custom_levels" folder that you want to use in your level, add them to this list.
   // Note: Like with art groups, these should also be added to your level's .gd file.
@@ -161,7 +161,74 @@
         "look": ["int32", 36],
         "vis-dist": ["meters", 200.0]
       }
-    }
+    },
+
+    // SIGNAL TOWER SWINGPOLES - EXT//
+       {
+        "trans": [389.077, 47.4602, 750.676], // translation
+        "etype": "swingpole",  // actor type
+        "game_task": 0, // associated game task (for powercells, etc)
+        "quat": [0.407332, -0.05, -0.498706, 0.501], // quaternion
+        "bsphere": [389.077, 47.4602, 750.676, 10], // bounding sphere
+        "lump": {
+          "name": "slt-swingpole-1",
+          "scale": [ "float", 1.0, 1.0, 1.0, 1.0 ]
+        }
+      },
+
+      {
+        "trans": [385.246, 35.5374, 713.757], // translation
+        "etype": "swingpole",  // actor type
+        "game_task": 0, // associated game task (for powercells, etc)
+        "quat": [-0.535268, -0.375558, -0.358487, 0.51861], // quaternion
+        "bsphere": [385.246, 35.5374, 713.757, 10], // bounding sphere
+        "lump": {
+          "name": "slt-swingpole-2",
+          "scale": [ "float", 1.0, 1.0, 1.0, 1.0 ]
+        }
+      },
+
+      {
+        "trans": [384.165, 49.1237, 836.61], // translation
+        "etype": "swingpole",  // actor type
+        "game_task": 0, // associated game task (for powercells, etc)
+        "quat": [0.495393, -0.495728, 0.505011, 0.503567], // quaternion
+        "bsphere": [384.165, 49.1237, 836.61, 10], // bounding sphere
+        "lump": {
+          "name": "slt-swingpole-3",
+          "scale": [ "float", 1.0, 1.0, 1.0, 1.0 ]
+        }
+      },
+
+      /// SWINGPOLE - TO FOREST ///
+      {
+        "trans": [715.573, 54.8533, 646.975], // translation
+        "etype": "swingpole",  // actor type
+        "game_task": 0, // associated game task (for powercells, etc)
+        "quat": [0.6, 0.8, -0.1, 0.6], // quaternion
+        "bsphere": [715.573, 54.8533, 646.975, 10], // bounding sphere
+        "lump": {
+          "name": "coast-swingpole-1",
+          "scale": [ "float", 1.0, 1.0, 1.0, 1.0 ]
+        }
+      },
+
+
+      /// Springbox aka trampoline
+      {
+        "trans": [382.012, 15.8287, 719.536], // translation
+        "etype": "springbox", // actor type
+        "game_task": "(game-task none)", // associated game task (for powercells, etc)
+        "quat": [ 0, 0, 0, 1 ], // quaternion
+        "bsphere": [382.012, 15.8287, 719.536, 10 ], // bounding sphere
+        "lump": {
+        "name": "slt-trampoline-1"
+  }
+}
+
+
+
+      
 
   ]
 }

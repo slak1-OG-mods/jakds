@@ -11,6 +11,9 @@
   "tpage-399.go"
   "tpage-401.go"
   "tpage-1470.go"
+  "bouncer.o"
+  "bounceytarp-ag.go"
+  "eichar-pole+0-ag.go"
   "coast.go"
   )
  )
